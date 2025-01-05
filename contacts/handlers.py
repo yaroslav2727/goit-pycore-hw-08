@@ -1,6 +1,7 @@
 from colorama import Fore, Style
 from .record import Record
 
+
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -98,7 +99,7 @@ def show_birthday(args, book):
         raise KeyError("Contact not found.")
     if not record.birthday:
         return "No birthday set for this contact."
-    return f"{name}'s birthday: {record.birthday}"
+    return f"{Fore.GREEN}{name}{Style.RESET_ALL}'s birthday: {Fore.CYAN}{record.birthday}{Style.RESET_ALL}"
 
 @input_error
 def birthdays(args, book):
@@ -109,3 +110,34 @@ def birthdays(args, book):
     for item in upcoming:
         result.append(f"{Fore.GREEN}{item['name']}{Style.RESET_ALL}: {Fore.CYAN}{item['congratulation_date']}{Style.RESET_ALL}")
     return "Upcoming birthdays:\n" + "\n".join(result)
+
+@input_error
+def wipe_storage(args, book):
+    confirmation = input(f"{Fore.RED}WARNING: This will delete all contacts. This operation cannot be undone.\nType 'YES' to confirm: {Style.RESET_ALL}")
+    if confirmation.strip().upper() == "YES":
+        book.data = {}
+        book.save_data()
+        return f"{Fore.LIGHTBLUE_EX}Storage wiped successfully.{Style.RESET_ALL}"
+    return f"{Fore.LIGHTRED_EX}Operation cancelled.{Style.RESET_ALL}"
+
+@input_error
+def show_help(args, book):
+    COMMANDS = {
+    "hello": "Greet the bot",
+    "add <name> <phone>": "Add new contact",
+    "change <name> <old_phone> <new_phone>": "Change existing contact's phone",
+    "phone <name>": "Show phone numbers for contact",
+    "all": "Show all contacts",
+    "remove <name> <phone>": "Remove phone from contact",
+    "delete <name>": "Delete contact completely",
+    "add-birthday <name> <date>": "Add birthday (or modify existing) for contact (date format: DD.MM.YYYY)",
+    "show-birthday <name>": "Show birthday for contact",
+    "birthdays": "Show upcoming birthdays (next work week)",
+    "wipe-storage": "Delete all contacts (irreversible!)",
+    "exit": "Close the program"
+    }
+    
+    result = [f"{Fore.LIGHTBLUE_EX}Available commands:{Style.RESET_ALL}"]
+    for cmd, desc in COMMANDS.items():
+        result.append(f"{Fore.LIGHTCYAN_EX}{cmd}{Style.RESET_ALL}: {desc}")
+    return "\n".join(result)

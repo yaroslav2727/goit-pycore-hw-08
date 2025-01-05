@@ -3,7 +3,8 @@ from contacts.address_book import AddressBook
 from contacts.handlers import (
     add_contact, change_contact, show_phone,
     show_all, remove_phone, delete_contact,
-    add_birthday, show_birthday, birthdays
+    add_birthday, show_birthday, birthdays, 
+    wipe_storage, show_help
 )
 
 init()
@@ -15,7 +16,7 @@ def parse_input(user_input):
 
 def main():
     book = AddressBook.load_data()
-    print(Fore.LIGHTGREEN_EX + "Welcome to the assistant bot!" + Style.RESET_ALL)
+    print(Fore.LIGHTGREEN_EX + "Welcome to the assistant bot!" + Style.RESET_ALL + "\nType 'help' to see available commands.")
     
     while True:
         user_input = input(Style.DIM + "Enter a command: " + Style.RESET_ALL).strip()
@@ -48,8 +49,13 @@ def main():
             print(show_birthday(args, book))
         elif command == "birthdays":
             print(birthdays(args, book))
+        elif command == "wipe-storage":
+            print(wipe_storage(args, book))
+        elif command == "help":
+            print(show_help(args, book))
         else:
-            print(Fore.RED + "Invalid command." + Style.RESET_ALL)
+            print(Fore.RED + "Invalid command." + Style.RESET_ALL + "\nType 'help' to see available commands.")
+            # print("Type 'help' to see available commands.")
 
 if __name__ == "__main__":
     main()
